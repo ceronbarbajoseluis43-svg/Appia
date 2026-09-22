@@ -1,5 +1,14 @@
 {
   "appId": "com.social18.app",
   "appName": "Social18",
-  "webDir": "www"
+  "webDir": "www",
+  "server": {
+    "serverHtml": "login.html"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  }
 }
+
