@@ -16,7 +16,7 @@ jobs:
     - name: Configurar Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '20'
+        node-version: '22'
 
     - name: Instalar dependencias del proyecto
       run: npm install
@@ -44,3 +44,4 @@ jobs:
       with:
         name: MiApp-Instalable
         path: android/app/build/outputs/apk/debug/app-debug.apk
+
