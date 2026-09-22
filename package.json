@@ -1,0 +1,26 @@
+{
+  "name": "appia",
+  "version": "1.0.0",
+  "description": "Para mayores de 18 años",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ceronbarbajoseluis43-svg/Appia.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ceronbarbajoseluis43-svg/Appia/issues"
+  },
+  "homepage": "https://github.com/ceronbarbajoseluis43-svg/Appia#readme",
+  "dependencies": {
+    "@capacitor/android": "^8.5.2",
+    "@capacitor/cli": "^8.5.2",
+    "@capacitor/core": "^8.5.2"
+  }
+}

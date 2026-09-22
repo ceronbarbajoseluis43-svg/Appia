@@ -1,0 +1,46 @@
+name: Generar APK de Produccion
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Clonar codigo fuente
+      uses: actions/checkout@v4
+
+    - name: Configurar Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Instalar dependencias del proyecto
+      run: npm install
+
+    - name: Configurar Java JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: gradle
+
+    - name: Sincronizar Capacitor con Android
+      run: npx cap sync
+
+    - name: Dar permisos al compilador Gradle
+      run: chmod +x android/gradlew
+
+    - name: Compilar APK en modo Debug
+      run: |
+        cd android
+        ./gradlew assembleDebug
+
+    - name: Subir APK como artefacto descargable
+      uses: actions/upload-artifact@v4
+      with:
+        name: MiApp-Instalable
+        path: android/app/build/outputs/apk/debug/app-debug.apk

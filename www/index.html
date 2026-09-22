@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#09090c">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>Social Swingers</title>
+
+  <style>
+    :root {
+      --bg: #09090c;
+      --surface: #121217;
+      --surface-2: #19191f;
+      --surface-3: #22222a;
+      --border: rgba(255,255,255,.08);
+      --text: #f5f5f7;
+      --muted: #9999a5;
+      --red: #ff405d;
+      --red-dark: #b9233e;
+      --purple: #9b5cff;
+      --neon: #d86cff;
+      --green: #39d98a;
+      --shadow: 0 12px 35px rgba(0,0,0,.35);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      overflow-x: hidden;
+      padding-bottom: 82px;
+    }
+
+    button, input, textarea {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 720px;
+      margin: auto;
+    }
+
+    /* =========================
+       TOP NAVBAR
+    ========================= */
+
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: 64px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      padding: 0 14px;
+      background: rgba(9,9,12,.92);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand {
+      font-size: 19px;
+      font-weight: 900;
+      letter-spacing: -.6px;
+      background: linear-gradient(90deg, #ff405d, #b76cff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .filters-btn {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 14px;
+      border-radius: 22px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .nav-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 7px;
+    }
+
+    .icon-btn {
+      position: relative;
+      width: 39px;
+      height: 39px;
+      border-radius: 50%;
+      background: var(--surface-2);
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+    }
+
+    .notification-dot {
+      position: absolute;
+      right: 5px;
+      top: 4px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--red);
+      border: 2px solid var(--bg);
+    }
+
+    /* =========================
+       FILTER MENU
+    ========================= */
+
+    .filter-menu {
+      display: none;
+      position: fixed;
+      z-index: 200;
+      top: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 28px);
+      max-width: 450px;
+      padding: 16px;
+      background: #17171d;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .filter-menu.active {
+      display: block;
+      animation: pop .18s ease;
+    }
+
+    @keyframes pop {
+      from {
+        opacity: 0;
+        transform: translateX(-50%) scale(.96);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(-50%) scale(1);
+      }
+    }
+
+    .filter-title {
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .filter-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .filter-option {
+      padding: 9px 13px;
+      border-radius: 18px;
+      background: var(--surface-3);
+      color: var(--muted);
+    }
+
+    .filter-option.active {
+      background: rgba(255,64,93,.16);
+      color: #ff7187;
+      border: 1px solid rgba(255,64,93,.35);
+    }
+
+    /* =========================
+       FEED
+    ========================= */
+
+    .feed {
+      padding: 12px 12px 30px;
+    }
+
+    .composer {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 14px;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow);
+    }
+
+    .composer-top {
+      display: flex;
+      gap: 11px;
+      align-items: center;
+    }
+
+    .avatar {
+      width: 43px;
+      height: 43px;
+      border-radius: 50%;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      background:
+        linear-gradient(135deg, #ff405d, #8d51ff);
+      border: 2px solid rgba(255,255,255,.12);
+    }
+
+    .composer-input {
+      flex: 1;
+      min-height: 43px;
+      display: flex;
+      align-items: center;
+      padding: 0 15px;
+      border-radius: 22px;
+      background: var(--surface-2);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .composer-actions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 7px;
+      margin-top: 12px;
+    }
+
+    .composer-action {
+      padding: 9px 4px;
+      border-radius: 12px;
+      background: var(--surface-2);
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .composer-action:active,
+    .action-btn:active,
+    .bottom-btn:active {
+      transform: scale(.96);
+    }
+
+    /* =========================
+       POST
+    ========================= */
+
+    .post {
+      margin-bottom: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .post-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 14px 9px;
+    }
+
+    .post-user {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .post-name {
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .post-meta {
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .more-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: transparent;
+      color: var(--muted);
+      font-size: 20px;
+    }
+
+    .post-content {
+      padding: 4px 14px 13px;
+      color: #e7e7eb;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .post-image {
+      position: relative;
+      width: 100%;
+      height: 310px;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(155,92,255,.35), transparent 30%),
+        radial-gradient(circle at 75% 70%, rgba(255,64,93,.3), transparent 32%),
+        linear-gradient(135deg, #1b1b22, #08080a);
+      color: rgba(255,255,255,.45);
+      overflow: hidden;
+    }
+
+    .post-image::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(
+          45deg,
+          transparent,
+          transparent 18px,
+          rgba(255,255,255,.025) 19px
+        );
+    }
+
+    .placeholder {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+
+    .placeholder-icon {
+      font-size: 42px;
+      margin-bottom: 6px;
+    }
+
+    .placeholder-text {
+      font-size: 12px;
+    }
+
+    .post-stats {
+      display: flex;
+      justify-content: space-between;
+      padding: 9px 14px;
+      color: var(--muted);
+      font-size: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .post-actions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .action-btn {
+      height: 46px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      transition: .18s;
+    }
+
+    .action-btn.liked {
+      color: var(--red);
+    }
+
+    .action-btn:hover {
+      background: rgba(255,255,255,.025);
+    }
+
+    /* =========================
+       WIDGETS
+    ========================= */
+
+    .widget {
+      margin: 12px 0;
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(155,92,255,.18);
+      background:
+        linear-gradient(135deg, rgba(155,92,255,.11), rgba(255,64,93,.06)),
+        var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .widget-label {
+      color: #bd91ff;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 900;
+      margin-bottom: 7px;
+    }
+
+    .widget h3 {
+      margin: 0 0 6px;
+      font-size: 17px;
+    }
+
+    .widget p {
+      margin: 0 0 13px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .widget-btn {
+      width: 100%;
+      padding: 11px;
+      border-radius: 12px;
+      background: rgba(255,255,255,.07);
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .online-list {
+      display: flex;
+      gap: 9px;
+      overflow-x: auto;
+      padding-bottom: 3px;
+      scrollbar-width: none;
+    }
+
+    .online-list::-webkit-scrollbar {
+      display: none;
+    }
+
+    .online-user {
+      min-width: 62px;
+      text-align: center;
+    }
+
+    .online-avatar {
+      width: 48px;
+      height: 48px;
+      margin: auto auto 5px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg,#222,#9b5cff);
+      border: 2px solid var(--green);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .online-name {
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    /* =========================
+       BOTTOM NAV
+    ========================= */
+
+    .bottom-nav {
+      position: fixed;
+      z-index: 150;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 70px;
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      background: rgba(12,12,16,.96);
+      backdrop-filter: blur(18px);
+      border-top: 1px solid var(--border);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .bottom-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      background: transparent;
+      color: #777783;
+      font-size: 19px;
+      transition: .15s;
+    }
+
+    .bottom-btn span {
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .bottom-btn.active {
+      color: var(--red);
+    }
+
+    /* =========================
+       MODAL
+    ========================= */
+
+    .modal {
+      position: fixed;
+      z-index: 500;
+      inset: 0;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      background: rgba(0,0,0,.75);
+      backdrop-filter: blur(7px);
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-box {
+      width: 100%;
+      max-width: 520px;
+      padding: 22px;
+      background: #17171d;
+      border-radius: 25px 25px 0 0;
+      border: 1px solid var(--border);
+      animation: slideUp .2s ease;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%);
+      }
+      to {
+        transform: translateY(0);
+      }
+    }
+
+    .modal h2 {
+      margin: 0 0 8px;
+    }
+
+    .modal p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .modal-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+      margin-top: 18px;
+    }
+
+    .modal-btn {
+      padding: 13px;
+      border-radius: 13px;
+      background: var(--surface-3);
+      font-weight: 800;
+    }
+
+    .modal-btn.primary {
+      background: linear-gradient(135deg,var(--red),var(--purple));
+    }
+
+    /* =========================
+       TOAST
+    ========================= */
+
+    .toast {
+      position: fixed;
+      z-index: 600;
+      left: 50%;
+      bottom: 84px;
+      transform: translateX(-50%) translateY(20px);
+      width: max-content;
+      max-width: calc(100% - 30px);
+      padding: 11px 16px;
+      border-radius: 20px;
+      background: #25252d;
+      color: white;
+      font-size: 13px;
+      opacity: 0;
+      pointer-events: none;
+      transition: .25s;
+      box-shadow: var(--shadow);
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (min-width: 700px) {
+      .feed {
+        padding-top: 20px;
+      }
+
+      .bottom-nav {
+        left: 50%;
+        right: auto;
+        width: 100%;
+        max-width: 720px;
+        transform: translateX(-50%);
+        border-left: 1px solid var(--border);
+        border-right: 1px solid var(--border);
+      }
+
+      .post-image {
+        height: 380px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- =========================
+       NAVBAR
+  ========================== -->
+
+  <header class="navbar">
+
+    <div class="brand">
+      Social Swingers
+    </div>
+
+    <button class="filters-btn" id="filtersBtn">
+      ⚙️ Filtros
+    </button>
+
+    <div class="nav-actions">
+
+      <button class="icon-btn" onclick="showToast('Perfil seleccionado')">
+        👤
+      </button>
+
+      <button class="icon-btn" onclick="showToast('No tienes nuevas notificaciones')">
+        🔔
+        <i class="notification-dot"></i>
+      </button>
+
+    </div>
+
+  </header>
+
+
+  <!-- =========================
+       FILTER MENU
+  ========================== -->
+
+  <div class="filter-menu" id="filterMenu">
+
+    <div class="filter-title">
+      Filtrar contenido
+    </div>
+
+    <div class="filter-options">
+
+      <button class="filter-option active"
+              onclick="selectFilter(this,'Todo')">
+        Todo
+      </button>
+
+      <button class="filter-option"
+              onclick="selectFilter(this,'Personas')">
+        Personas
+      </button>
+
+      <button class="filter-option"
+              onclick="selectFilter(this,'Parejas')">
+        Parejas
+      </button>
+
+      <button class="filter-option"
+              onclick="selectFilter(this,'Grupos')">
+        Grupos
+      </button>
+
+      <button class="filter-option"
+              onclick="selectFilter(this,'Eventos')">
+        Eventos
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       FEED
+  ========================== -->
+
+  <main class="feed">
+
+    <!-- COMPOSER -->
+
+    <section class="composer">
+
+      <div class="composer-top">
+
+        <div class="avatar">
+          JL
+        </div>
+
+        <button class="composer-input"
+                onclick="openComposer()">
+          ¿Qué quieres compartir?
+        </button>
+
+      </div>
+
+      <div class="composer-actions">
+
+        <button class="composer-action"
+                onclick="showToast('Selector de fotos abierto')">
+          📷 Foto
+        </button>
+
+        <button class="composer-action"
+                onclick="showToast('Selector de video abierto')">
+          🎥 Video
+        </button>
+
+        <button class="composer-action"
+                onclick="showToast('Encuesta creada')">
+          📊 Encuesta
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- ONLINE WIDGET -->
+
+    <section class="widget">
+
+      <div class="widget-label">
+        Comunidad
+      </div>
+
+      <h3>Personas activas ahora</h3>
+
+      <div class="online-list">
+
+        <div class="online-user">
+          <div class="online-avatar">AM</div>
+          <div class="online-name">Alex</div>
+        </div>
+
+        <div class="online-user">
+          <div class="online-avatar">MR</div>
+          <div class="online-name">María</div>
+        </div>
+
+        <div class="online-user">
+          <div class="online-avatar">DV</div>
+          <div class="online-name">David</div>
+        </div>
+
+        <div class="online-user">
+          <div class="online-avatar">SO</div>
+          <div class="online-name">Sofía</div>
+        </div>
+
+        <div class="online-user">
+          <div class="online-avatar">LU</div>
+          <div class="online-name">Luis</div>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- POST 1 -->
+
+    <article class="post">
+
+      <div class="post-header">
+
+        <div class="avatar">
+          AM
+        </div>
+
+        <div class="post-user">
+          <div class="post-name">
+            Alex Martínez
+          </div>
+
+          <div class="post-meta">
+            Hace 12 min · Público
+          </div>
+        </div>
+
+        <button class="more-btn"
+                onclick="showToast('Más opciones')">
+          ⋮
+        </button>
+
+      </div>
+
+      <div class="post-content">
+        Una noche tranquila, buena música y ganas de conocer
+        gente nueva. ¿Qué planes tienen para este fin de semana?
+      </div>
+
+      <div class="post-image">
+
+        <div class="placeholder">
+          <div class="placeholder-icon">
+            🖼️
+          </div>
+
+          <div class="placeholder-text">
+            Imagen de ejemplo
+          </div>
+        </div>
+
+      </div>
+
+      <div class="post-stats">
+
+        <span id="likes-1">
+          ❤️ 24 Me gusta
+        </span>
+
+        <span>
+          8 comentarios · 3 compartidos
+        </span>
+
+      </div>
+
+      <div class="post-actions">
+
+        <button class="action-btn"
+                onclick="toggleLike(this,'likes-1',24)">
+          ♡ Me gusta
+        </button>
+
+        <button class="action-btn"
+                onclick="openComments()">
+          💬 Comentar
+        </button>
+
+        <button class="action-btn"
+                onclick="sharePost()">
+          ↗ Compartir
+        </button>
+
+      </div>
+
+    </article>
+
+
+    <!-- WIDGET -->
+
+    <section class="widget">
+
+      <div class="widget-label">
+        Sugerencia
+      </div>
+
+      <h3>Descubre nuevas comunidades</h3>
+
+      <p>
+        Explora grupos y conversaciones según tus intereses,
+        preferencias y ubicación general.
+      </p>
+
+      <button class="widget-btn"
+              onclick="showToast('Explorando comunidades...')">
+        🔎 Explorar
+      </button>
+
+    </section>
+
+
+    <!-- POST 2 -->
+
+    <article class="post">
+
+      <div class="post-header">
+
+        <div class="avatar">
+          MR
+        </div>
+
+        <div class="post-user">
+
+          <div class="post-name">
+            María R.
+          </div>
+
+          <div class="post-meta">
+            Hace 35 min · Amigos
+          </div>
+
+        </div>
+
+        <button class="more-btn"
+                onclick="showToast('Más opciones')">
+          ⋮
+        </button>
+
+      </div>
+
+      <div class="post-content">
+        Compartiendo algunas ideas para organizar una reunión
+        entre amigos. Siempre es mejor hablar primero, respetar
+        límites y asegurarnos de que todos estén cómodos.
+      </div>
+
+      <div class="post-image">
+
+        <div class="placeholder">
+
+          <div class="placeholder-icon">
+            ✨
+          </div>
+
+          <div class="placeholder-text">
+            Espacio para multimedia
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="post-stats">
+
+        <span id="likes-2">
+          ❤️ 51 Me gusta
+        </span>
+
+        <span>
+          14 comentarios · 7 compartidos
+        </span>
+
+      </div>
+
+      <div class="post-actions">
+
+        <button class="action-btn"
+                onclick="toggleLike(this,'likes-2',51)">
+          ♡ Me gusta
+        </button>
+
+        <button class="action-btn"
+                onclick="openComments()">
+          💬 Comentar
+        </button>
+
+        <button class="action-btn"
+                onclick="sharePost()">
+          ↗ Compartir
+        </button>
+
+      </div>
+
+    </article>
+
+
+    <!-- EVENT WIDGET -->
+
+    <section class="widget">
+
+      <div class="widget-label">
+        Próximamente
+      </div>
+
+      <h3>Eventos de la comunidad</h3>
+
+      <p>
+        Aquí aparecerán eventos, reuniones y actividades
+        creadas por miembros de la comunidad.
+      </p>
+
+      <button class="widget-btn"
+              onclick="showToast('Sección de eventos')">
+        📅 Ver eventos
+      </button>
+
+    </section>
+
+
+    <!-- POST 3 -->
+
+    <article class="post">
+
+      <div class="post-header">
+
+        <div class="avatar">
+          DV
+        </div>
+
+        <div class="post-user">
+
+          <div class="post-name">
+            David V.
+          </div>
+
+          <div class="post-meta">
+            Hace 1 h · Público
+          </div>
+
+        </div>
+
+        <button class="more-btn"
+                onclick="showToast('Más opciones')">
+          ⋮
+        </button>
+
+      </div>
+
+      <div class="post-content">
+        ¿Qué características les gustaría encontrar en una
+        comunidad social moderna? Estoy recopilando ideas.
+      </div>
+
+      <div class="post-stats">
+
+        <span id="likes-3">
+          ❤️ 17 Me gusta
+        </span>
+
+        <span>
+          5 comentarios · 2 compartidos
+        </span>
+
+      </div>
+
+      <div class="post-actions">
+
+        <button class="action-btn"
+                onclick="toggleLike(this,'likes-3',17)">
+          ♡ Me gusta
+        </button>
+
+        <button class="action-btn"
+                onclick="openComments()">
+          💬 Comentar
+        </button>
+
+        <button class="action-btn"
+                onclick="sharePost()">
+          ↗ Compartir
+        </button>
+
+      </div>
+
+    </article>
+
+  </main>
+
+</div>
+
+
+<!-- =========================
+     BOTTOM NAVIGATION
+========================== -->
+
+<nav class="bottom-nav">
+
+  <button class="bottom-btn active"
+          onclick="navigate(this,'Inicio')">
+    🏠
+    <span>Inicio</span>
+  </button>
+
+  <button class="bottom-btn"
+          onclick="navigate(this,'Descubrir')">
+    🔎
+    <span>Descubrir</span>
+  </button>
+
+  <button class="bottom-btn"
+          onclick="navigate(this,'Mensajes')">
+    💬
+    <span>Mensajes</span>
+  </button>
+
+  <button class="bottom-btn"
+          onclick="navigate(this,'Privacidad')">
+    🔒
+    <span>Privacidad</span>
+  </button>
+
+</nav>
+
+
+<!-- =========================
+     COMMENTS MODAL
+========================== -->
+
+<div class="modal" id="commentsModal">
+
+  <div class="modal-box">
+
+    <h2>Comentarios</h2>
+
+    <p>
+      Los comentarios de esta demostración son interactivos
+      localmente. La conexión con una base de datos puede
+      añadirse posteriormente.
+    </p>
+
+    <button class="modal-btn primary"
+            onclick="closeComments()">
+      Cerrar
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- =========================
+     18+ MODAL
+========================== -->
+
+<div class="modal" id="ageModal">
+
+  <div class="modal-box">
+
+    <h2>🔞 Contenido para adultos</h2>
+
+    <p>
+      Esta aplicación está destinada exclusivamente a personas
+      mayores de 18 años. Al continuar confirmas que tienes
+      al menos 18 años y aceptas las normas de la comunidad.
+    </p>
+
+    <div class="modal-buttons">
+
+      <button class="modal-btn"
+              onclick="exitAgeGate()">
+        Salir
+      </button>
+
+      <button class="modal-btn primary"
+              onclick="acceptAge()">
+        Soy mayor de 18
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- TOAST -->
+
+<div class="toast" id="toast"></div>
+
+
+<script>
+  "use strict";
+
+  /* =========================
+     AGE VERIFICATION
+  ========================== */
+
+  document.addEventListener("DOMContentLoaded", function () {
+
+    const verified = localStorage.getItem("ageVerified");
+
+    if (verified !== "true") {
+      document.getElementById("ageModal")
+        .classList.add("active");
+    }
+
+  });
+
+  function acceptAge() {
+
+    localStorage.setItem("ageVerified", "true");
+
+    document.getElementById("ageModal")
+      .classList.remove("active");
+
+    showToast("Bienvenido a Social Swingers");
+
+  }
+
+  function exitAgeGate() {
+
+    document.body.innerHTML = `
+      <div style="
+        min-height:100vh;
+        display:grid;
+        place-items:center;
+        background:#09090c;
+        color:white;
+        font-family:system-ui;
+        text-align:center;
+        padding:30px;">
+        <div>
+          <h2>Acceso no disponible</h2>
+          <p style="color:#999;">
+            Esta aplicación está destinada a mayores de 18 años.
+          </p>
+        </div>
+      </div>
+    `;
+
+  }
+
+
+  /* =========================
+     FILTERS
+  ========================== */
+
+  const filtersBtn =
+    document.getElementById("filtersBtn");
+
+  const filterMenu =
+    document.getElementById("filterMenu");
+
+  filtersBtn.addEventListener("click", function (event) {
+
+    event.stopPropagation();
+
+    filterMenu.classList.toggle("active");
+
+  });
+
+  document.addEventListener("click", function (event) {
+
+    if (
+      !filterMenu.contains(event.target) &&
+      event.target !== filtersBtn
+    ) {
+      filterMenu.classList.remove("active");
+    }
+
+  });
+
+  function selectFilter(element, filter) {
+
+    document
+      .querySelectorAll(".filter-option")
+      .forEach(function (button) {
+        button.classList.remove("active");
+      });
+
+    element.classList.add("active");
+
+    filterMenu.classList.remove("active");
+
+    showToast("Filtro: " + filter);
+
+  }
+
+
+  /* =========================
+     LIKE SYSTEM
+  ========================== */
+
+  function toggleLike(button, counterId, initialCount) {
+
+    const counter =
+      document.getElementById(counterId);
+
+    let count =
+      parseInt(
+        counter.textContent.replace(/\D/g, "")
+      ) || initialCount;
+
+    if (button.classList.contains("liked")) {
+
+      count--;
+
+      button.classList.remove("liked");
+
+      button.innerHTML = "♡ Me gusta";
+
+    } else {
+
+      count++;
+
+      button.classList.add("liked");
+
+      button.innerHTML = "♥ Me gusta";
+
+    }
+
+    counter.textContent =
+      "❤️ " + count + " Me gusta";
+
+  }
+
+
+  /* =========================
+     COMMENTS
+  ========================== */
+
+  function openComments() {
+
+    document
+      .getElementById("commentsModal")
+      .classList.add("active");
+
+  }
+
+  function closeComments() {
+
+    document
+      .getElementById("commentsModal")
+      .classList.remove("active");
+
+  }
+
+
+  /* =========================
+     SHARE
+  ========================== */
+
+  async function sharePost() {
+
+    const shareData = {
+      title: "Social Swingers",
+      text: "Mira esta publicación en Social Swingers."
+    };
+
+    try {
+
+      if (navigator.share) {
+
+        await navigator.share(shareData);
+
+      } else {
+
+        showToast("Compartir no está disponible");
+
+      }
+
+    } catch (error) {
+
+      console.log("Compartir cancelado");
+
+    }
+
+  }
+
+
+  /* =========================
+     COMPOSER
+  ========================== */
+
+  function openComposer() {
+
+    showToast("Editor de publicación próximamente");
+
+  }
+
+
+  /* =========================
+     NAVIGATION
+  ========================== */
+
+  function navigate(button, section) {
+
+    document
+      .querySelectorAll(".bottom-btn")
+      .forEach(function (item) {
+        item.classList.remove("active");
+      });
+
+    button.classList.add("active");
+
+    if (section !== "Inicio") {
+
+      showToast(section + " — sección de demostración");
+
+    }
+
+  }
+
+
+  /* =========================
+     TOAST
+  ========================== */
+
+  let toastTimer;
+
+  function showToast(message) {
+
+    const toast =
+      document.getElementById("toast");
+
+    toast.textContent = message;
+
+    toast.classList.add("show");
+
+    clearTimeout(toastTimer);
+
+    toastTimer = setTimeout(function () {
+
+      toast.classList.remove("show");
+
+    }, 2200);
+
+  }
+
+
+  /* =========================
+     CLOSE MODALS WITH BACKDROP
+  ========================== */
+
+  document
+    .getElementById("commentsModal")
+    .addEventListener("click", function (event) {
+
+      if (event.target === this) {
+        closeComments();
+      }
+
+    });
+
+</script>
+
+</body>
+</html>

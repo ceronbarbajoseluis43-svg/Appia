@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Social18</string>
+    <string name="title_activity_main">Social18</string>
+    <string name="package_name">com.social18.app</string>
+    <string name="custom_url_scheme">com.social18.app</string>
+</resources>
