@@ -1,4 +1,3 @@
-yaml
 name: Generar APK de Produccion
 
 # Controla cuándo se ejecutará el flujo de trabajo (de forma manual desde la pestaña Actions)
@@ -20,7 +19,7 @@ jobs:
         uses: actions/setup-java@v6
         with:
           distribution: 'temurin'
-          java-version: '17'          # Cambia a '11' o '21' según requiera tu proyecto
+          java-version: '17'
           cache: 'gradle'
 
       # 3. Opcional: Da permisos de ejecución al wrapper de Gradle (útil en entornos Linux)
@@ -29,7 +28,7 @@ jobs:
 
       # 4. Ejecuta la compilación de tu APK utilizando Gradle
       - name: Compilar APK (Build APK)
-        run: ./gradlew assembleRelease # Cambia a 'assembleDebug' si necesitas un APK de pruebas
+        run: ./gradlew assembleRelease
 
       # 5. Sube el APK generado para que lo puedas descargar desde la pestaña de "Artifacts"
       - name: Subir APK como Artefacto
