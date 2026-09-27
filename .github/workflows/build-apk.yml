@@ -1,12 +1,10 @@
 name: Generar APK de Produccion
 
-# Controla cuándo se ejecutará el flujo de trabajo (de forma manual desde la pestaña Actions)
 on:
   workflow_dispatch:
 
 jobs:
   build:
-    # Se ejecuta sobre la última versión estable de Ubuntu disponible en GitHub
     runs-on: ubuntu-latest
 
     steps:
@@ -14,29 +12,47 @@ jobs:
       - name: Checkout del código
         uses: actions/checkout@v4
 
-      # 2. Configura el entorno de Java
+      # 2. Configura Node.js (Necesario para Ionic/Capacitor)
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Puedes cambiar a '18' o '22' según tu proyecto
+          cache: 'npm'
+
+      # 3. Configura el entorno de Java
       - name: Configurar JDK de Java
         uses: actions/setup-java@v6
         with:
           distribution: 'temurin'
           java-version: '17'
           cache: 'gradle'
-          # Le indica a la caché que busque los archivos de Gradle dentro de la carpeta android
-          cache-dependency-path: 'android/build.gradle' 
+          cache-dependency-path: 'android/build.gradle'
 
-      # 3. Opcional: Da permisos de ejecución al wrapper de Gradle indicando la ruta correcta
+      # 4. Instala las dependencias de Node de tu proyecto
+      - name: Instalar dependencias de NPM
+        run: npm install
+
+      # 5. Construye los archivos web de tu app (Compilación Web)
+      - name: Construir proyecto Web
+        run: npm run build --if-present
+
+      # 6. Sincroniza Capacitor (Esto genera los archivos .gradle faltantes que causaban el error)
+      - name: Sincronizar Capacitor con Android
+        run: npx cap sync android
+
+      # 7. Opcional: Da permisos de ejecución al wrapper de Gradle
       - name: Otorgar permisos a Gradle Wrapper
         run: chmod +x gradlew
         working-directory: android
 
-      # 4. Ejecuta la compilación de tu APK dentro de la carpeta android
+      # 8. Ejecuta la compilación final de tu APK
       - name: Compilar APK (Build APK)
         run: ./gradlew assembleRelease
         working-directory: android
 
-      # 5. Sube el APK generado buscando en la ruta interna de la carpeta android
+      # 9. Sube el APK generado para su descarga
       - name: Subir APK como Artefacto
         uses: actions/upload-artifact@v4
         with:
           name: MiApp-Instalable
-          path: android/app/build/outputs
+          path: android/app/build/output
