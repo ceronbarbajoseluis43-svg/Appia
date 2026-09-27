@@ -10,29 +10,33 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Trae el código del repositorio (Actualizado a v4 para corregir advertencia de Node.js)
+      # 1. Trae el código del repositorio
       - name: Checkout del código
         uses: actions/checkout@v4
 
-      # 2. Configura el entorno de Java (Actualizado a v6 para corregir advertencia de Gradle/Java)
+      # 2. Configura el entorno de Java
       - name: Configurar JDK de Java
         uses: actions/setup-java@v6
         with:
           distribution: 'temurin'
           java-version: '17'
           cache: 'gradle'
+          # Le indica a la caché que busque los archivos de Gradle dentro de la carpeta android
+          cache-dependency-path: 'android/build.gradle' 
 
-      # 3. Opcional: Da permisos de ejecución al wrapper de Gradle (útil en entornos Linux)
+      # 3. Opcional: Da permisos de ejecución al wrapper de Gradle indicando la ruta correcta
       - name: Otorgar permisos a Gradle Wrapper
         run: chmod +x gradlew
+        working-directory: android
 
-      # 4. Ejecuta la compilación de tu APK utilizando Gradle
+      # 4. Ejecuta la compilación de tu APK dentro de la carpeta android
       - name: Compilar APK (Build APK)
         run: ./gradlew assembleRelease
+        working-directory: android
 
-      # 5. Sube el APK generado para que lo puedas descargar desde la pestaña de "Artifacts"
+      # 5. Sube el APK generado buscando en la ruta interna de la carpeta android
       - name: Subir APK como Artefacto
         uses: actions/upload-artifact@v4
         with:
           name: MiApp-Instalable
-          path: app/build/outputs/apk/release/app-release-unsigned.apk
+          path: android/app/build/outputs
